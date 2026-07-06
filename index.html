@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Effy</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body {
+    height:100%;
+    overflow:hidden;
+    font-family:'Poppins', sans-serif;
+    background: radial-gradient(ellipse at top, #0b1030 0%, #05070f 60%, #020208 100%);
+    color:#f1e9ff;
+  }
+  .scene {
+    position:relative;
+    width:100%;
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    overflow:hidden;
+  }
+
+  /* stars */
+  .stars, .stars2 {
+    position:absolute; inset:0;
+    background-repeat:repeat;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20px 30px, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 90px 120px, #fff, transparent),
+      radial-gradient(1px 1px at 150px 60px, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 220px 190px, #fff, transparent),
+      radial-gradient(1px 1px at 280px 40px, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 320px 150px, #fff, transparent),
+      radial-gradient(1px 1px at 60px 200px, #fff, transparent);
+    background-size:360px 240px;
+    opacity:0.7;
+    animation:twinkle 4s ease-in-out infinite alternate;
+  }
+  .stars2 { background-size:480px 320px; opacity:0.4; animation-duration:6s; }
+  @keyframes twinkle { from{opacity:.3;} to{opacity:.85;} }
+
+  .moon {
+    position:absolute; top:8%; right:12%;
+    width:70px; height:70px; border-radius:50%;
+    background:#cfd6e8;
+    box-shadow:0 0 14px 3px rgba(207,214,232,.3), 0 0 30px 10px rgba(207,214,232,.08);
+    opacity:0;
+    transition:opacity 2.5s ease;
+  }
+  .moon.show { opacity:1; }
+
+  /* shooting star */
+  .shooting-star {
+    position:absolute;
+    top:22%; left:-10%;
+    width:2px; height:2px;
+    background:#fff;
+    border-radius:50%;
+    box-shadow:0 0 6px 2px #fff;
+    opacity:0;
+  }
+  .shooting-star::before {
+    content:"";
+    position:absolute;
+    top:50%; right:0;
+    width:140px; height:1px;
+    background:linear-gradient(to left, rgba(255,255,255,.9), transparent);
+    transform:translateY(-50%);
+  }
+  .shooting-star.fly {
+    animation:shoot 2.2s cubic-bezier(.3,.6,.3,1) forwards;
+  }
+  @keyframes shoot {
+    0%   { opacity:0; transform:translate(0,0); }
+    8%   { opacity:1; }
+    90%  { opacity:1; }
+    100% { opacity:0; transform:translate(120vw, 40vh); }
+  }
+
+  .content {
+    position:relative;
+    z-index:5;
+    width:90%;
+    max-width:640px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+
+  /* Gate */
+  #gate { display:flex; flex-direction:column; align-items:center; gap:28px; }
+  #gate p { font-weight:300; font-size:18px; opacity:.85; letter-spacing:.5px; }
+  #beginBtn {
+    padding:14px 38px;
+    border:1px solid rgba(255,255,255,.35);
+    background:transparent;
+    color:#f1e9ff;
+    border-radius:40px;
+    font-size:15px;
+    letter-spacing:1px;
+    cursor:pointer;
+    transition:.4s;
+  }
+  #beginBtn:hover { background:rgba(255,255,255,.08); transform:scale(1.03); }
+
+  /* Name */
+  #nameWrap { min-height:100px; display:flex; align-items:center; justify-content:center; }
+  #name {
+    font-family:'Great Vibes', cursive;
+    font-size:64px;
+    color:#d9b8c4;
+    text-shadow:0 0 10px rgba(217,184,196,.35), 0 0 24px rgba(217,184,196,.15);
+  }
+
+  /* Typing message */
+  #typingWrap { min-height:120px; display:flex; align-items:center; justify-content:center; margin-top:10px; }
+  #typing {
+    font-size:22px;
+    font-weight:300;
+    line-height:1.7;
+    max-width:520px;
+  }
+  #typing .cursor {
+    display:inline-block;
+    width:2px;
+    background:#f1e9ff;
+    margin-left:2px;
+    animation:blink 1s step-start infinite;
+  }
+  @keyframes blink { 50% { opacity:0; } }
+
+  /* Proposal */
+  #proposal {
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    gap:30px;
+    opacity:0;
+    transition:opacity 1.8s ease;
+  }
+  #proposal.show { opacity:1; }
+  #proposal h2 {
+    font-family:'Great Vibes', cursive;
+    font-size:44px;
+    color:#d9b8c4;
+    font-weight:400;
+  }
+  .choices { display:flex; gap:18px; flex-wrap:wrap; justify-content:center; }
+  .choices button {
+    padding:14px 30px;
+    border-radius:40px;
+    border:none;
+    font-size:15px;
+    cursor:pointer;
+    transition:.35s;
+    font-family:'Poppins', sans-serif;
+  }
+  #yesBtn { background:#ff5d8f; color:#fff; font-weight:600; animation:pulse 1.8s infinite; }
+  #yesBtn:hover { transform:scale(1.06); }
+  #laterBtn { background:transparent; border:1px solid rgba(255,255,255,.3); color:#f1e9ff; }
+  #laterBtn:hover { background:rgba(255,255,255,.08); }
+  @keyframes pulse {
+    0%,100% { box-shadow:0 0 0 0 rgba(255,93,143,.5); }
+    50% { box-shadow:0 0 0 14px rgba(255,93,143,0); }
+  }
+
+  /* Response */
+  #response {
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+  }
+  #response h1 { font-size:48px; }
+  #response p { font-size:18px; opacity:.9; max-width:460px; font-weight:300; }
+
+  .hidden { display:none !important; }
+
+  /* floating hearts for yes */
+  .heart {
+    position:absolute;
+    bottom:-30px;
+    font-size:22px;
+    color:#ff8fb3;
+    animation:float 5s linear forwards;
+    pointer-events:none;
+  }
+  @keyframes float {
+    from { transform:translateY(0) scale(.6); opacity:1; }
+    to   { transform:translateY(-110vh) scale(1.4); opacity:0; }
+  }
+
+  @media (max-width:600px) {
+    #name { font-size:46px; }
+    #typing { font-size:18px; }
+    #proposal h2 { font-size:32px; }
+  }
+</style>
+</head>
+<body>
+<div class="scene">
+  <div class="stars"></div>
+  <div class="stars2"></div>
+  <div class="moon" id="moon"></div>
+  <div class="shooting-star" id="shootingStar"></div>
+  <div id="heartsLayer"></div>
+
+  <div class="content">
+
+    <div id="gate">
+      <p>This is for you, Effy.</p>
+      <button id="beginBtn">begin</button>
+    </div>
+
+    <div id="main" class="hidden">
+      <div id="nameWrap"><h1 id="name"></h1></div>
+      <div id="typingWrap"><div id="typing"></div></div>
+
+      <div id="proposal">
+        <h2>Will you be my girlfriend? ❤️</h2>
+        <div class="choices">
+          <button id="yesBtn">💖 Yes, I'd love to</button>
+          <button id="laterBtn">🌸 Can we take things slowly?</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="response">
+      <h1 id="responseEmoji"></h1>
+      <p id="responseText"></p>
+    </div>
+
+  </div>
+</div>
+
+<audio id="music" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- EmailJS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+<script>
+  // ============= FILL THESE IN FROM YOUR EMAILJS DASHBOARD =============
+  const EMAILJS_PUBLIC_KEY  = "92moMobNEnuZk-ze2";
+  const EMAILJS_SERVICE_ID  = "service_hg5mwdh";
+  const EMAILJS_TEMPLATE_ID = "template_puaarju";
+  // =======================================================================
+
+  if (window.emailjs && EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY") {
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+  }
+
+  const gate = document.getElementById('gate');
+  const main = document.getElementById('main');
+  const nameEl = document.getElementById('name');
+  const typingEl = document.getElementById('typing');
+  const proposal = document.getElementById('proposal');
+  const music = document.getElementById('music');
+  music.volume = 0.3;
+  const moon = document.getElementById('moon');
+  const shootingStar = document.getElementById('shootingStar');
+  const responseBox = document.getElementById('response');
+  const responseEmoji = document.getElementById('responseEmoji');
+  const responseText = document.getElementById('responseText');
+  const heartsLayer = document.getElementById('heartsLayer');
+
+  const NAME = "Effy";
+
+  const messages = [
+    "Hey, Effy...",
+    "We've known each other since last year...",
+    "Somewhere between all our conversations...",
+    "you quietly became someone very special to me.",
+    "Stop being so cute...",
+    "It's unfair.",
+    "How am I supposed to focus...",
+    "when all I can think about is you?",
+    "You make ordinary days feel extraordinary.",
+    "I've tried to keep these feelings to myself...",
+    "but they always find their way back to you.",
+    "So today, instead of keeping you guessing...",
+    "I just want to be honest.",
+    "I like you.",
+    "I really do.",
+    "And I'd love the chance to make more memories with you.",
+    "Effy..."
+  ];
+
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  async function typeText(el, text, speed = 55) {
+    for (let i = 0; i <= text.length; i++) {
+      el.textContent = text.slice(0, i);
+      await sleep(speed);
+    }
+  }
+
+  async function eraseText(el, speed = 30) {
+    const text = el.textContent;
+    for (let i = text.length; i >= 0; i--) {
+      el.textContent = text.slice(0, i);
+      await sleep(speed);
+    }
+  }
+
+  async function typeName() {
+    for (let i = 0; i <= NAME.length; i++) {
+      nameEl.textContent = NAME.slice(0, i);
+      await sleep(160);
+    }
+  }
+
+  async function runSequence() {
+    // shooting star + moon
+    shootingStar.classList.add('fly');
+    await sleep(900);
+    moon.classList.add('show');
+    await sleep(2000);
+    music.play().catch(() => {});
+    await sleep(600);
+
+    await typeName();
+    await sleep(700);
+
+    for (let i = 0; i < messages.length; i++) {
+      const isLast = i === messages.length - 1;
+      await typeText(typingEl, messages[i]);
+      await sleep(isLast ? 1400 : 900);
+      if (!isLast) {
+        await eraseText(typingEl);
+        await sleep(250);
+      }
+    }
+
+    await sleep(1000);
+    proposal.style.display = 'flex';
+    requestAnimationFrame(() => proposal.classList.add('show'));
+  }
+
+  document.getElementById('beginBtn').addEventListener('click', () => {
+    gate.classList.add('hidden');
+    main.classList.remove('hidden');
+    runSequence();
+  });
+
+  function spawnHearts() {
+    for (let i = 0; i < 24; i++) {
+      setTimeout(() => {
+        const h = document.createElement('div');
+        h.className = 'heart';
+        h.textContent = '❤';
+        h.style.left = Math.random() * 100 + 'vw';
+        h.style.fontSize = (14 + Math.random() * 20) + 'px';
+        h.style.animationDuration = (4 + Math.random() * 3) + 's';
+        heartsLayer.appendChild(h);
+        setTimeout(() => h.remove(), 7000);
+      }, i * 120);
+    }
+  }
+
+  function sendResponse(choice) {
+    if (window.emailjs && EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY") {
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        choice: choice,
+        time: new Date().toLocaleString()
+      }).catch(err => console.error("EmailJS error:", err));
+    }
+  }
+
+  document.getElementById('yesBtn').addEventListener('click', () => {
+    sendResponse("Yes, I'd love to 💖");
+    proposal.style.display = 'none';
+    responseBox.style.display = 'flex';
+    responseEmoji.textContent = '❤️';
+    responseText.textContent = "You just made me really happy. I can't wait to make more memories with you.";
+    spawnHearts();
+  });
+
+  document.getElementById('laterBtn').addEventListener('click', () => {
+    sendResponse("Wants to take things slowly 🌸");
+    proposal.style.display = 'none';
+    responseBox.style.display = 'flex';
+    responseEmoji.textContent = '🌸';
+    responseText.textContent = "That's completely okay. No pressure at all — I'm happy just getting to know you more.";
+  });
+</script>
+</body>
+</html>
